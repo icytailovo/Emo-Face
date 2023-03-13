@@ -58,7 +58,7 @@ def detect_face(image_path, rotation):
     # ) 
     
     
-    # __________ detecting faces through finetuned resnet _________
+    # __________ detecting faces through deep neural network _________
     ## [initialize_FaceDetectorYN]
     image1 = cv2.imread(image_path)
     detector = cv2.FaceDetectorYN.create(
