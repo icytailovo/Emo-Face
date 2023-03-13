@@ -48,7 +48,7 @@ def detect_face(image_path, rotation):
     beta = 1 - alpha
     gamma = 0.0
 
-    # __________ detecting faces through eigenfaces _________
+    # __________ detecting faces through haar cascade classifier _________
     # faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     # faces = faceCascade.detectMultiScale(
     #         gray,
