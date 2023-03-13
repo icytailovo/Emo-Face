@@ -1,7 +1,7 @@
 import openai
 from PIL import Image
 
-openai.api_key = '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'
+openai.api_key = ''
 
 def replace_with_emoji(input_path, prompt):
   response = openai.Image.create_edit(

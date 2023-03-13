@@ -48,24 +48,58 @@ def detect_face(image_path, rotation):
     beta = 1 - alpha
     gamma = 0.0
 
-    faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    faces = faceCascade.detectMultiScale(
-            gray,
-            scaleFactor=1.3,
-            minNeighbors=3,
-            minSize=(30, 30)
-    ) 
+    # __________ detecting faces through eigenfaces _________
+    # faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    # faces = faceCascade.detectMultiScale(
+    #         gray,
+    #         scaleFactor=1.3,
+    #         minNeighbors=3,
+    #         minSize=(30, 30)
+    # ) 
+    
+    
+    # __________ detecting faces through finetuned resnet _________
+    ## [initialize_FaceDetectorYN]
+    image1 = cv2.imread(image_path)
+    detector = cv2.FaceDetectorYN.create(
+        "face_detection_yunet_2022mar.onnx",    # face detection model
+        "",
+        (320, 320),
+        0.9,                                    # score threshold, filtering out faces of score < score_threshold.
+        0.3,                                    # nms threshold, suppress bounding boxes of iou >= nms_threshold
+        5000                                    # top k
+    )
+    
+    detector.setInputSize((image1.shape[1], image1.shape[0]))
+    faces = detector.detect(image1)
+    
+    if faces:
+        print("Found {0} Faces!".format(len(faces)))
+        for idx, face in enumerate(faces[1]):
+            print('Face {}, top-left coordinates: ({:.0f}, {:.0f}), box width: {:.0f}, box height {:.0f}, score: {:.2f}'.format(idx, face[0], face[1], face[2], face[3], face[-1]))
+            x = int(face[0])
+            y = int(face[1])
+            w = int(face[2])
+            h = int(face[3])
+            
+            sub_img = image[y:y+h, x:x+w]
+            white_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
 
-    print("Found {0} Faces!".format(len(faces)))
+            res = cv2.addWeighted(sub_img, alpha, white_rect, beta, gamma)
 
-    for (x, y, w, h) in faces:
-        sub_img = image[y:y+h, x:x+w]
-        white_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
+            # Putting the image back to its position
+            image[y:y+h, x:x+w] = res
 
-        res = cv2.addWeighted(sub_img, alpha, white_rect, beta, gamma)
+    
 
-        # Putting the image back to its position
-        image[y:y+h, x:x+w] = res
+    # for (x, y, w, h) in faces:
+    #     sub_img = image[y:y+h, x:x+w]
+    #     white_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
+
+    #     res = cv2.addWeighted(sub_img, alpha, white_rect, beta, gamma)
+
+    #     # Putting the image back to its position
+    #     image[y:y+h, x:x+w] = res
 
     cv2.imwrite("tmp/before_resize.png", image)
     # resize to square image
