@@ -18,15 +18,42 @@
     </div>
     <div>
         <h3>Problem Setup:</h3>
-        <p></p>
+        <p>There are times when people want to post their photos on social media without showing their real faces. 
+            We want to provide a tool that automatically detects human faces and replaces them with other animals' 
+            faces or emojis in a simple manner. This tool can protect people's privacy (by not showing their original faces) 
+            and, at the same time, add some spice to the original photo. In detail, we will let the user upload an image that 
+            contains people's faces. Then, the user will be prompted to write a short text description about the original image 
+            with what kind of object to replace their original faces. Finally, the user can view and save newly generated images. </p>
     </div>
     <div>
         <h3>Data Used:</h3>
-        <p></p>
+        <p> We use pre-trained data of OpenCV to detect faces and the pre-trained data of the DALL·E model to apply mask. </p>
+        <p><a href="https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html">Cascade Classifier Training</a></p>
+        <p><a href="https://openai.com/research/dall-e">DALL·E: Creating images from text</a></p>
     </div>
     <div>
-        <h3>Techniques:</h3>
-        <p></p>
+        <h3>Algorithms / Techniques:</h3>
+        <p>We use OpenCV for face detection and DALL•E for image editing based on the input prompt. After receiving the image 
+            from our user, we first use OpenCV to detect the location of faces in the picture. Then, we change their alpha channel 
+            to 0 and apply the DALL-E technique to the image. We feed the text that describes the resulting image given by the user 
+            and the image generated to DALL-E to produce the masks on the image.
+        </p>
+        <p><a href="https://github.com/icytailovo/Emo-Face">GitHub repo</a></p>
+    </div>
+    <div>
+        <h3>How OpenCV works:</h3>
+        <p>OpenCV uses a combination of 
+            machine learning and computer vision techniques to detect faces in images. This includes the Haar Cascade Classifier, 
+            a machine learning-based approach trained to detect features such as edges, lines, and corners in faces. Eigenfaces is 
+            a technique used in facial recognition that is implemented in OpenCV. The basic idea behind Eigenfaces is to represent 
+            each face as a linear combination of a small number of "eigenfaces," essentially the principal components of a set of 
+            face images. Like the Eigenfaces technique, the Fisherfaces technique uses a different approach to extract the most 
+            significant features. And the Local Binary Patterns (LBP) Cascade Classifier Algorithm is also a machine learning-based 
+            approach that uses local binary patterns to detect faces. And the HOG (Histogram of Oriented Gradients) Cascade Classifier 
+            captures information about the local gradient orientation of an image. Since the DALL·E model is trained on a large dataset of 
+            text-image pairs, it learn to generate images that match a wide range of textual descriptions. 
+        </p>
+        <p><a href="https://docs.opencv.org/3.4/da/d60/tutorial_face_main.html">Face Recognition with OpenCV</a></p>
     </div>
 </body>
 </html>
