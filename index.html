@@ -21,28 +21,46 @@
         <p>There are times when people want to post their photos on social media without showing their real faces. 
             We want to provide a tool that automatically detects human faces and replaces them with other animals' 
             faces or emojis in a simple manner. This tool can protect people's privacy (by not showing their original faces) 
-            and, at the same time, add some spice to the original photo. In detail, we will let the user upload an image that 
-            contains people's faces. Then, the user will be prompted to write a short text description about the original image 
-            with what kind of object to replace their original faces. Finally, the user can view and save newly generated images. </p>
+            and, at the same time, add some spice to the original photo. Instead of using a fixed set of emojis, we ask the users
+            to describe the emojis they want and prompt an deep neural network to generate the emoji, which can sometimes add some
+            spice to the photo.
+            
+            Specifically, we will let the user upload an image that contains people's faces. Then, the user will be prompted to 
+            write a short text description about the image and  what type of emoji to replace their original faces. Finally, the
+            user can view and save newly generated images. </p>
     </div>
     <div>
         <h3>Data Used:</h3>
-        <p> We use pre-trained data of OpenCV to detect faces and the pre-trained data of the DALL·E model to apply mask. </p>
-        <p><a href="https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html">Cascade Classifier Training</a></p>
+        <p> Our face detection model was pre-trained on the WIDER FACE dataset, and the pre-trained data of the DALL·E model to apply mask. </p>
+        <p><a href="http://shuoyang1213.me/WIDERFACE/">WIDER FACE: A Face Detection Benchmark</a></p>
+        <p><a href="https://arxiv.org/abs/1511.06523">WIDER FACE Paper</a></p>
         <p><a href="https://openai.com/research/dall-e">DALL·E: Creating images from text</a></p>
     </div>
     <div>
-        <h3>Algorithms / Techniques:</h3>
-        <p>We use OpenCV for face detection and DALL•E for image editing based on the input prompt. After receiving the image 
-            from our user, we first use OpenCV to detect the location of faces in the picture. Then, we change their alpha channel 
-            to 0 and apply the DALL-E technique to the image. We feed the text that describes the resulting image given by the user 
-            and the image generated to DALL-E to produce the masks on the image.
+        <h3>Algorithms:</h3>
+        <p>In the latest version of our pipeline, we used YuNet for face detection and DALL•E for image editing based on the input prompt. 
+            After receiving an image from our user, we first use OpenCV to detect the location of faces in the picture. Then, we change
+            their alpha channel to 0 and save it as a "picture mask". We then feed both the picture mask and the text prompt entered by the
+            user to DALL-E to produce a modified version of the photo (where faces are covered by fun emojis &#129409;!).
         </p>
         <p><a href="https://github.com/icytailovo/Emo-Face">GitHub repo</a></p>
     </div>
     <div>
-        <h3>How OpenCV works:</h3>
-        <p>OpenCV uses a combination of 
+        <h3>Face Detection</h3>
+        <p> In our first attempt, we tried to use the Haar Cascade Classifier, a built-in model from OpenCV (a python library that contains
+            a collection of machine learning and computer vision models and algorithms). The Haar Cascade Classifier detects a set of Haar 
+            features such as edges, lines, and corners, creates integral images, and then train a cascade of weak to strong classifiers
+            (Adaboost Training). However, while testing, the Haar Cascade Classifier seemed to yield unsatisfactory performance. Thus, we
+            decided to move on to a deep neural network based approach.
+            
+            After some research, we decided to use YuNet, a CNN-based face detection model that works on RGB images. YuNet is trained on WIDER Face,
+            with a 0.887 Average Precision (AP) on the easy set, 0.871 AP on the medium set, and a 0.768 AP on the hard set. The loss used in the 
+            training of YuNet is EIoU, a novel extended IoU (Intersection over Union). The paper describing EIoU can be accessed at:
+            https://ieeexplore.ieee.org/document/9429909.
+            
+            After adopting the deep neural network model, our pipeline's performance improved significantly.
+            
+<!--             OpenCV uses a combination of 
             machine learning and computer vision techniques to detect faces in images. This includes the Haar Cascade Classifier, 
             a machine learning-based approach trained to detect features such as edges, lines, and corners in faces. Eigenfaces is 
             a technique used in facial recognition that is implemented in OpenCV. The basic idea behind Eigenfaces is to represent 
@@ -51,9 +69,30 @@
             significant features. And the Local Binary Patterns (LBP) Cascade Classifier Algorithm is also a machine learning-based 
             approach that uses local binary patterns to detect faces. And the HOG (Histogram of Oriented Gradients) Cascade Classifier 
             captures information about the local gradient orientation of an image. Since the DALL·E model is trained on a large dataset of 
-            text-image pairs, it learn to generate images that match a wide range of textual descriptions. 
+            text-image pairs, it learn to generate images that match a wide range of textual descriptions.  -->
         </p>
-        <p><a href="https://docs.opencv.org/3.4/da/d60/tutorial_face_main.html">Face Recognition with OpenCV</a></p>
+        <p><a href="https://github.com/ShiqiYu/libfacedetection">YuNet</a></p>
+    </div>
+    <div>
+        <h3>Image Editing with DALL·E</h3>
+        <p> In 2020, <a href="https://arxiv.org/abs/2005.14165">GPT-3</a> showed that language can be used to instruct a large neural network to perform a variety of text generation tasks.
+            Later in the same year, <a href="https://cdn.openai.com/papers/Generative_Pretraining_from_Pixels_V2.pdf">Image GPT</a> showed that the same type of neural network can also be used to generate images with high fidelity.
+            DALL·E extends these findings and shows that manipulating visual concepts through language is now within reach.
+            
+            Like GPT-3, DALL·E is a <a href="https://arxiv.org/abs/1706.03762">transformer language model</a>. It receives both the text and the image as a single stream of data,
+            and is trained using maximum likelihood to generate all of the tokens, one after another.
+            This training procedure allows DALL·E to not only generate an image from scratch, but also to regenerate any rectangular
+            region of an existing image that extends to the bottom-right corner, in a way that is consistent with the text prompt.
+            
+            DALL·E is a simple decoder-only transformer that receives both the text and the image as a single stream of 1280 tokens—256
+            for the text and 1024 for the image—and models all of them autoregressively. The attention mask at each of its 64 self-attention
+            layers allows each image token to attend to all text tokens. DALL·E uses the standard causal mask for the text tokens, and sparse
+            attention for the image tokens with either a row, column, or convolutional attention pattern, depending on the layer.
+            
+            More information on DALL·E is available on their official website and their published paper.
+        </p>
+        <p><a href="https://openai.com/research/dall-e">DALL·E: Creating images from text</a></p>
+        <p><a href="https://arxiv.org/abs/2102.12092">DALL·E Paper</a></p>
     </div>
 </body>
 </html>
