@@ -1,17 +1,8 @@
 import React, {useState} from 'react';
-import {Button, Container, TextField, Typography, Grid, Alert} from '@mui/material';
+import {Button, Container, TextField, Typography, Grid, Alert, CircularProgress} from '@mui/material';
 import Box from "@mui/material/Box";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import "../src/App.css";
-
-const images = [
-    {
-        url: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
-    },
-    {
-        url: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d"
-    },
-];
 
 const Upload = () => {
     const [file, setFile] = useState(null);
@@ -19,6 +10,7 @@ const Upload = () => {
     const [newImages, setNewImages] = useState([]);
     const [text, setText] = useState("");
     const [alert, setAlert] = useState(false);
+    const [progress, setProgress] = useState(false);
 
     const handleChange = (e) => {
         console.log(e.target.files[0]);
@@ -33,6 +25,7 @@ const Upload = () => {
         if (file !== null && text !== "") {
             setAlert(false);
             setNewImages([]);
+            setProgress(true);
 
             let query = "http://localhost:8080?path=" + file.name + "&prompt=" + text;
             console.log(query);
@@ -57,7 +50,7 @@ const Upload = () => {
                 }
                 console.log(tempList);
                 setNewImages(tempList);
-
+                setProgress(false);
             } catch (error) {
                 console.error('There was an error!', error);
             }
@@ -114,6 +107,15 @@ const Upload = () => {
                     <Box py={1} sx={{width: 450}}>
                         <Alert severity={"warning"}>Please provide an image and a text description.</Alert>
                     </Box>
+                }
+
+                {
+                    (!progress) ?
+                        <></>
+                        :
+                        <Box py={1} sx={{ display: 'flex' }}>
+                            <CircularProgress />
+                        </Box>
                 }
 
                 {

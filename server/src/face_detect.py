@@ -71,11 +71,11 @@ def detect_face(image_path, rotation):
     )
     
     detector.setInputSize((image1.shape[1], image1.shape[0]))
-    faces = detector.detect(image1)
+    faces = detector.detect(image1)[1]
     
-    if faces:
+    if faces is not None:
         print("Found {0} Faces!".format(len(faces)))
-        for idx, face in enumerate(faces[1]):
+        for idx, face in enumerate(faces):
             print('Face {}, top-left coordinates: ({:.0f}, {:.0f}), box width: {:.0f}, box height {:.0f}, score: {:.2f}'.format(idx, face[0], face[1], face[2], face[3], face[-1]))
             x = int(face[0])
             y = int(face[1])
@@ -89,12 +89,14 @@ def detect_face(image_path, rotation):
 
             # Putting the image back to its position
             image[y:y+h, x:x+w] = res
-
+    else:
+        print("No Face Found!")
+        raise Exception("No Face Found")
     
 
     # for (x, y, w, h) in faces:
     #     sub_img = image[y:y+h, x:x+w]
-    #     white_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
+    #     white_rect = np.ones(sub_img.shapee, dtype=np.uint8) * 0
 
     #     res = cv2.addWeighted(sub_img, alpha, white_rect, beta, gamma)
 
