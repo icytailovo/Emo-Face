@@ -32,8 +32,9 @@ const Upload = () => {
     const handleClick = async (e) => {
         if (file !== null && text !== "") {
             setAlert(false);
+            setNewImages([]);
 
-            let query = "http://localhost:8080?url=" + imageURL + "&prompt=" + text;
+            let query = "http://localhost:8080?path=" + file.name + "&prompt=" + text;
             console.log(query);
             try {
                 let response = await fetch(query);
