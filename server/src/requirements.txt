@@ -3,5 +3,5 @@ opencv-utils
 opencv-python
 requests
 openai
-PIL
+pillow
 opencv-contrib-python
