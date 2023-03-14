@@ -40,8 +40,14 @@
         <h3>Algorithms:</h3>
         <p>In the latest version of our pipeline, we used YuNet for face detection and DALL•E for image editing based on the input prompt. 
             After receiving an image from our user, we first detect and box out the faces in the picture via a CNN-based deep learning network.
-            Then, we change their alpha channel to 0 and save it as a "picture mask". We then feed both the picture mask and the text prompt
+            Then, we convert the image into RGBA format and set the alpha channel of the pixels that are boxed out by our face detector to 0.
+            We save this new image as a "picture mask". Finally, we feed both the picture mask and the text prompt
             entered by the user to DALL·E 2 to produce a modified version of the photo (where faces are covered by fun emojis &#129409;!).
+        </p>
+        <p>
+            As a side note, DALL·E 2 only accepts square inputs. So before passing the image to DALL·E 2, we would first have to resized the masked image
+            into a square image, and then project DALL·E 2's output back to the original image size via Lanczos interpolation. If the input image is
+            too wide or high, the resizing/projection algorithm could serious deform the image, which might result in low-quality outputs.
         </p>
         <p><a href="https://github.com/icytailovo/Emo-Face">GitHub repo</a></p>
     </div>
