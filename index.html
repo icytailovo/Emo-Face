@@ -17,7 +17,7 @@
         </iframe>
     </div>
     <div>
-        <h3>Problem Setup:</h3>
+        <h3>Problem Setup</h3>
         <p> There are times when people want to post their photos on social media without showing their real faces. 
             We want to provide a tool that automatically detects human faces and replaces them with other animals' 
             faces or emojis in a simple manner. This tool can protect people's privacy and, at the same time, add some spice
@@ -29,7 +29,7 @@
             user can very easily view and save newly generated images. </p>
     </div>
     <div>
-        <h3>Data Used:</h3>
+        <h3>Data Used</h3>
         <p> Our face detection model was pre-trained on the WIDER FACE dataset, and DALL·E 2, our image editing model, is pre-trained
             on 250 million text-image pairs collected from the internet </p>
         <p><a href="http://shuoyang1213.me/WIDERFACE/">WIDER FACE Dataset</a></p>
@@ -37,7 +37,7 @@
         <p><a href="https://openai.com/product/dall-e-2">DALL·E 2</a></p>
     </div>
     <div>
-        <h3>Algorithms:</h3>
+        <h3>Algorithms</h3>
         <p>In the latest version of our pipeline, we used YuNet for face detection and DALL•E for image editing based on the input prompt. 
             After receiving an image from our user, we first detect and box out the faces in the picture via a CNN-based deep learning network.
             Then, we convert the image into RGBA format and set the alpha channel of the pixels that are boxed out by our face detector to 0.
@@ -103,6 +103,14 @@
         </p>
         <p><a href="https://openai.com/research/dall-e">DALL·E: Creating images from text</a></p>
         <p><a href="https://arxiv.org/abs/2102.12092">DALL·E Research Paper</a></p>
+    </div>
+    <div>
+        <h3>Our Contribution</h3>
+        <p>
+            The models we used (YuNet and DALL·E 2) are pretrained and pre-existing. Our major contributions are: defining the problem, researching
+            prior works and models that fit our task, hyperparameter tuning, pipelining multiple models to form a solution, data manipulation & normalization,
+            image preprocessing & postprocessing, and building a web application for end users.
+        </p>
     </div>
 </body>
 </html>
