@@ -17,7 +17,7 @@ npm start
 1. Open a separate terminal
 ```
 cd server/src
-pip install openai
+pip install -r requirements.txt
 ```
 2. Either ask project admin or get an OpenAI API key through [this guide](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
 3. In the `pic_edit.py` file, set the OpenAI API key
